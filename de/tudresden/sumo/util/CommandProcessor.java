@@ -20,10 +20,13 @@ package de.tudresden.sumo.util;
 
 import it.polito.appeal.traci.TraCIException.UnexpectedData;
 import it.polito.appeal.traci.protocol.Command;
+import it.polito.appeal.traci.protocol.RequestMessage;
 import it.polito.appeal.traci.protocol.ResponseContainer;
+import it.polito.appeal.traci.protocol.ResponseMessage;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import de.tudresden.sumo.config.Constants;
 import de.tudresden.ws.container.SumoBoundingBox;
@@ -54,12 +57,49 @@ public class CommandProcessor extends Query{
 		queryAndVerifySingle(sc.cmd);
 	}
 	
+	public synchronized void do_job_set(ArrayList<SumoCommand> scList) throws IOException{
+		RequestMessage msg = new RequestMessage();
+		for(SumoCommand sc : scList) {
+			msg.append(sc.cmd);
+		}
+		queryAndVerify(msg);
+	}
+	
+	public synchronized Object do_job_get(ArrayList<SumoCommand> scList) throws IOException{
+		Object output = null;
+		ArrayList<Object> outputList = new ArrayList<>();
+		RequestMessage msg = new RequestMessage();
+		for(SumoCommand sc : scList) {
+			msg.append(sc.cmd);
+		}
+		ResponseMessage rm = queryAndVerify(msg);
+		
+		for(int i = 0 ; i < rm.responses().size(); i++) {
+			ResponseContainer rc = rm.responses().get(i);
+			SumoCommand sc = scList.get(i);
+			Command resp = rc.getResponse();
+			output = verifyCommandResponse(sc, output, resp);
+			outputList.add(output);
+		}
+		
+		return outputList;
+	}
+	
 	public synchronized Object do_job_get(SumoCommand sc) throws IOException{
 		
 		Object output = null;
 		ResponseContainer rc = queryAndVerifySingle(sc.cmd);
 		Command resp = rc.getResponse();
 	
+		output = verifyCommandResponse(sc, output, resp);
+		
+		
+			
+		return output;
+	}
+
+	private Object verifyCommandResponse(SumoCommand sc, Object output,
+			Command resp) throws UnexpectedData {
 		verifyGetVarResponse(resp, sc.response, sc.input2, sc.input3);
 		verify("", sc.output_type, (int)resp.content().readUnsignedByte());
 		
@@ -264,9 +304,6 @@ public class CommandProcessor extends Query{
 			output = resp.content().readUnsignedByte();
 			
 		}
-		
-		
-			
 		return output;
 	}
 
