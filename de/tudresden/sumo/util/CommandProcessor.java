@@ -57,7 +57,7 @@ public class CommandProcessor extends Query{
 		queryAndVerifySingle(sc.cmd);
 	}
 	
-	public synchronized void do_job_set(ArrayList<SumoCommand> scList) throws IOException{
+	public synchronized void do_jobs_set(ArrayList<SumoCommand> scList) throws IOException{
 		RequestMessage msg = new RequestMessage();
 		for(SumoCommand sc : scList) {
 			msg.append(sc.cmd);
@@ -65,7 +65,7 @@ public class CommandProcessor extends Query{
 		queryAndVerify(msg);
 	}
 	
-	public synchronized Object do_job_get(ArrayList<SumoCommand> scList) throws IOException{
+	public synchronized ArrayList<Object>  do_jobs_get(ArrayList<SumoCommand> scList) throws IOException{
 		Object output = null;
 		ArrayList<Object> outputList = new ArrayList<>();
 		RequestMessage msg = new RequestMessage();

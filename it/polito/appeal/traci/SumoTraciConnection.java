@@ -309,6 +309,18 @@ public class SumoTraciConnection {
 		
 	}
 	
+	public synchronized void do_jobs_set(ArrayList<SumoCommand> cmdList) throws Exception{
+		
+		if (isClosed())
+			throw new IllegalStateException("connection is closed");
+		
+		try {this.cp.do_jobs_set(cmdList);}
+		catch (Exception e) {
+			closeAndDontCareAboutInterruptedException();
+			throw e;
+		}
+		
+	}
 	
 	public synchronized Object do_job_get(SumoCommand cmd) throws Exception{
 		
@@ -327,6 +339,22 @@ public class SumoTraciConnection {
 		return output;
 	}
 	
+	public synchronized ArrayList<Object> do_jobs_get(ArrayList<SumoCommand> cmd) throws Exception{
+			
+			ArrayList<Object> output = null;
+			if (isClosed())
+				throw new IllegalStateException("connection is closed");
+			
+			try {
+				output = this.cp.do_jobs_get(cmd);
+			}
+			catch (Exception e) {
+				closeAndDontCareAboutInterruptedException();
+				throw e;
+			}
+			
+			return output;
+		}
 	
 	public synchronized void do_timestep() throws Exception{
 		
