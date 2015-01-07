@@ -78,7 +78,11 @@ public class CommandProcessor extends Query{
 			ResponseContainer rc = rm.responses().get(i);
 			SumoCommand sc = scList.get(i);
 			Command resp = rc.getResponse();
-			output = verifyCommandResponse(sc, output, resp);
+			//TODO: make this more general
+			// hack for allowing doing timesteps.
+			if(sc.input1 != Constants.CMD_SIMSTEP2) {
+				output = verifyCommandResponse(sc, output, resp);
+			}
 			outputList.add(output);
 		}
 		
