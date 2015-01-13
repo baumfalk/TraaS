@@ -320,7 +320,12 @@ public class SumoTraciConnection {
 		
 		
 		
-		try {this.cp.do_jobs_set(cmdList);}
+		try {
+			long beginTime = System.nanoTime();
+			this.cp.do_jobs_set(cmdList);
+			double duration = (System.nanoTime()-beginTime)/1e6;
+			System.out.println("SumoTraciConnection.do_jobs_set took " + duration +" ms");
+		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();
 			throw e;
@@ -336,6 +341,7 @@ public class SumoTraciConnection {
 		
 		try {
 			output = this.cp.do_job_get(cmd);
+			
 		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();
@@ -355,7 +361,10 @@ public class SumoTraciConnection {
 			throw new IllegalStateException("connection is closed");
 		
 		try {
+			long beginTime = System.nanoTime();
 			output = this.cp.do_jobs_get(cmdList);
+			double duration = (System.nanoTime()-beginTime)/1e6;
+			System.out.println("SumoTraciConnection.do_jobs_get took " + duration +" ms");
 		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();

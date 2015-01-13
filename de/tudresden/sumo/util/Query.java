@@ -23,10 +23,12 @@ import it.polito.appeal.traci.TraCIException;
 import it.polito.appeal.traci.TraCIException.UnexpectedData;
 import it.polito.appeal.traci.protocol.Command;
 import it.polito.appeal.traci.protocol.RequestMessage;
-import it.polito.appeal.traci.protocol.ResponseMessage;
 import it.polito.appeal.traci.protocol.ResponseContainer;
+import it.polito.appeal.traci.protocol.ResponseMessage;
 import it.polito.appeal.traci.protocol.StatusResponse;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -38,10 +40,15 @@ import de.tudresden.sumo.config.Constants;
 public abstract class Query {
 	private final DataOutputStream outStream; 
 	private final DataInputStream inStream; 
-	
+	private final BufferedOutputStream outBufferedStream;
+	private final BufferedInputStream inBufferedStream;
+
 	public Query(Socket sock) throws IOException {
-		outStream = new DataOutputStream(sock.getOutputStream());
-		inStream = new DataInputStream(sock.getInputStream());
+		outBufferedStream = new BufferedOutputStream(sock.getOutputStream());
+		inBufferedStream = new BufferedInputStream(sock.getInputStream());
+
+		outStream = new DataOutputStream(outBufferedStream);
+		inStream = new DataInputStream(inBufferedStream);
 	}
 
 	/**
@@ -51,9 +58,11 @@ public abstract class Query {
 	 */
 	protected ResponseMessage doQuery(RequestMessage msg) throws IOException {
 		msg.writeTo(getOutStream());
-		return new ResponseMessage(inStream);
+		getOutStream().flush();
+		ResponseMessage response = new ResponseMessage(inStream);
+		return response;
 	}
-
+	
 	/**
 	 * Like {@link #doQuery(RequestMessage)}; in addition, verifies that all
 	 * responses are successful and and the statuses match the requests.
@@ -63,9 +72,11 @@ public abstract class Query {
 	 * @see #doQuery(RequestMessage)
 	 */
 	protected ResponseMessage queryAndVerify(RequestMessage reqMsg) throws IOException {
-		
+		long beginTime = System.nanoTime();
+
 		reqMsg.writeTo(getOutStream());
-		
+		getOutStream().flush();
+
 		ResponseMessage respMsg = new ResponseMessage(inStream);
 
 		List<Command> commands = reqMsg.commands();
@@ -82,9 +93,13 @@ public abstract class Query {
 				throw new TraCIException("SUMO error for command "
 						+ statusResp.id() + ": " + statusResp.description());
 		}
-		
+		double duration = (System.nanoTime()-beginTime)/1e6;
+		System.out.println("TraaS.Query.queryAndVerify took " + duration +" ms");
+
 		return respMsg;
 	}
+	
+	
 
 	/**
 	 * Like {@link #doQuery(RequestMessage)}, but good for one-command/
