@@ -1,0 +1,54 @@
+<project name="TrafficMAS" default="dist" basedir=".">
+	<description>
+For making a TraaS-jar
+	</description>
+	
+	<property name="build" location="build"/>
+	<property name="dist"  location="dist"/>
+	<property name="src" location="."/>
+	<property name="TrafficMAS" location="../TrafficMAS"/>
+
+		
+	<target name="init">
+	    <!-- create timestamp-->
+	    <tstamp/>
+	    <mkdir dir="${build}"/>
+	</target>
+	
+    <target name="compile" depends="init">
+	    <javac srcdir="${src}" destdir="${build}"/>
+	</target>
+	
+	<tstamp>
+	    <format property="FULLDATE" pattern="yyyy-MM-dd'T'HH:mm:ss.SSS" locale="en,GB"/>
+	 </tstamp>
+	
+	<target name="dist" depends="compile">
+	    <mkdir dir="${dist}/lib/${DSTAMP}"/>
+	    <mkdir dir="${dist}/lib/latest"/>
+	    <mkdir dir="${dist}/doc/${DSTAMP}/${FULLDATE}"/>
+	    <mkdir dir="${dist}/doc/latest"/>
+	    <javadoc sourcepath="${src}" destdir="${dist}/doc/${DSTAMP}/${FULLDATE}"/>
+	    <jar jarfile="${dist}/lib/${DSTAMP}/TraaS-${FULLDATE}.jar" basedir="${build}"/>
+	    <jar jarfile="${dist}/lib/${DSTAMP}/TraaS_sources-${FULLDATE}.jar" basedir="${src}" includes="**/*.java"/>
+	    <jar compress="true" destfile="${dist}/lib/${DSTAMP}/TraaS_javadoc-${FULLDATE}.jar" basedir="${dist}/doc/${DSTAMP}/${FULLDATE}" />
+
+		<copy todir="${dist}/doc/latest" >  
+    	    <fileset dir="${dist}/doc/${DSTAMP}/${FULLDATE}" includes="**"/>  
+	 	</copy>
+		<copy file="${dist}/lib/${DSTAMP}/TraaS-${FULLDATE}.jar" tofile="${dist}/lib/latest/TraaS.jar"/>
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${FULLDATE}.jar" tofile="${dist}/lib/latest/TraaS_sources.jar"/>
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${FULLDATE}.jar" tofile="${dist}/lib/latest/TraaS_javadoc.jar"/>
+		
+		<copy file="${dist}/lib/${DSTAMP}/TraaS-${FULLDATE}.jar" tofile="${TrafficMAS}/lib/TraaS.jar"/>
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${FULLDATE}.jar" tofile="${TrafficMAS}/lib/TraaS_sources.jar"/>
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${FULLDATE}.jar" tofile="${TrafficMAS}/lib/TraaS_javadoc.jar"/>
+	
+	</target>
+	
+	<target name="clean" description="clean up" >
+	    <!-- Delete the ${build} and ${dist} directory trees -->
+	    <delete dir="${build}"/>
+	    <delete dir="${dist}"/>
+	  </target>
+</project>
