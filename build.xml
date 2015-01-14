@@ -7,6 +7,8 @@ For making a TraaS-jar
 	<property name="dist"  location="dist"/>
 	<property name="src" location="."/>
 	<property name="TrafficMAS" location="../TrafficMAS"/>
+	<property name="TrafficMASTests" location="../TrafficMASTests"/>
+
 
 	<tstamp>
 	    <format property="FULLDATE" pattern="yyyy-MM-dd'T'HH:mm:ss.SSS" locale="en,GB"/>
@@ -42,6 +44,11 @@ For making a TraaS-jar
 		<!--- to trafficmas -->
 		<copy file="${dist}/lib/${DSTAMP}/TraaS-${FULLDATE}.jar" tofile="${TrafficMAS}/lib/TraaS.jar"/>
 		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${FULLDATE}.jar" tofile="${TrafficMAS}/lib/TraaS_sources.jar"/>
+
+		<!--- to trafficmastests -->
+		<copy file="${dist}/lib/${DSTAMP}/TraaS-${FULLDATE}.jar" tofile="${TrafficMASTests}/lib/TraaS.jar"/>
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${FULLDATE}.jar" tofile="${TrafficMASTests}/lib/TraaS_sources.jar"/>
+		
 	</target>
 	
 	<target name="javadoc" depends="init">
@@ -56,6 +63,9 @@ For making a TraaS-jar
 
 		<!--- to trafficmas -->
 		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${FULLDATE}.jar" tofile="${TrafficMAS}/lib/TraaS_javadoc.jar"/>
+		
+		<!--- to trafficmastests -->
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${FULLDATE}.jar" tofile="${TrafficMASTests}/lib/TraaS_javadoc.jar"/>
 
 	</target>
 	<target name="clean" description="clean up" >
