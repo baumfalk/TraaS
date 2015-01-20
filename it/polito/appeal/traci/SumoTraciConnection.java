@@ -72,8 +72,6 @@ public class SumoTraciConnection {
 				while ((strLine = br.readLine()) != null)   {
 					
 					if(strLine.contains("Error:") && !strLine.contains("peer shutdown")){System.err.println (strLine);}
-					//else{System.out.println (strLine);}
-					
 				  }	
 				
 			} catch (IOException e) {
@@ -321,10 +319,7 @@ public class SumoTraciConnection {
 		
 		
 		try {
-			long beginTime = System.nanoTime();
 			this.cp.do_jobs_set(cmdList);
-			double duration = (System.nanoTime()-beginTime)/1e6;
-			System.out.println("SumoTraciConnection.do_jobs_set took " + duration +" ms");
 		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();
@@ -361,10 +356,7 @@ public class SumoTraciConnection {
 			throw new IllegalStateException("connection is closed");
 		
 		try {
-			long beginTime = System.nanoTime();
 			output = this.cp.do_jobs_get(cmdList);
-			double duration = (System.nanoTime()-beginTime)/1e6;
-			System.out.println("SumoTraciConnection.do_jobs_get took " + duration +" ms");
 		}
 		catch (Exception e) {
 			closeAndDontCareAboutInterruptedException();

@@ -79,13 +79,10 @@ public class ResponseMessage {
 	 * @throws IOException
 	 */
 	public ResponseMessage(DataInputStream dis) throws IOException {
-		long beginTime = System.nanoTime();
 		int totalLen = dis.readInt() - Integer.SIZE/8;
 		
 		byte[] buffer = new byte[totalLen];
 		dis.readFully(buffer);
-		double duration = (System.nanoTime()-beginTime)/1e6;
-		System.out.println("DataInputStream.ReadFully took " + duration +" ms");
 		Storage s = new Storage(buffer);
 		
 		while (s.validPos()) {
@@ -114,8 +111,6 @@ public class ResponseMessage {
 			
 			pairs.add(responseContainer);
 		}
-		duration = (System.nanoTime()-beginTime)/1e6;
-		System.out.println("TraaS.ResponseMessage.ResponseMessage took " + duration +" ms");
 	}
 	
 	private boolean isStatusOnlyResponse(int statusResponseID) {

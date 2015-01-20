@@ -65,7 +65,6 @@ public class RequestMessage {
 	 * @throws IOException
 	 */
 	public void writeTo(DataOutputStream dos) throws IOException {
-		long beginTime = System.nanoTime();
 		int totalLen = Integer.SIZE / 8; // the length header
 
 		for (Command cmd : commands) {
@@ -73,12 +72,6 @@ public class RequestMessage {
 		}
 
 		Checksum checksum = null;
-//		if (log.isDebugEnabled()) {
-//			checksum = new CRC32();
-//			log.debug("sending a message " + totalLen + " bytes long");
-//			
-//		}
-		
 		dos.writeInt(totalLen);
 
 		for (Command cmd : commands) {
@@ -86,11 +79,6 @@ public class RequestMessage {
 			cmd.writeRawTo(s);
 			writeStorage(s, dos, checksum);
 		}
-		double duration = (System.nanoTime()-beginTime)/1e6;
-		System.out.println("TraaS.RequestMessage.writeTo took " + duration +" ms");
-
-//		if (log.isDebugEnabled())
-//			log.debug("message checksum (without len) = " + checksum.getValue());
 	}
 
 	private void writeStorage(Storage storage, OutputStream os, Checksum checksum)

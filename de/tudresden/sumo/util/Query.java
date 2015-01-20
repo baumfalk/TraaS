@@ -72,8 +72,6 @@ public abstract class Query {
 	 * @see #doQuery(RequestMessage)
 	 */
 	protected ResponseMessage queryAndVerify(RequestMessage reqMsg) throws IOException {
-		long beginTime = System.nanoTime();
-
 		reqMsg.writeTo(getOutStream());
 		getOutStream().flush();
 
@@ -93,8 +91,6 @@ public abstract class Query {
 				throw new TraCIException("SUMO error for command "
 						+ statusResp.id() + ": " + statusResp.description());
 		}
-		double duration = (System.nanoTime()-beginTime)/1e6;
-		System.out.println("TraaS.Query.queryAndVerify took " + duration +" ms");
 
 		return respMsg;
 	}
