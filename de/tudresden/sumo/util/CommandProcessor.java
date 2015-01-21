@@ -26,7 +26,9 @@ import it.polito.appeal.traci.protocol.ResponseMessage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 import de.tudresden.sumo.config.Constants;
 import de.tudresden.ws.container.SumoBoundingBox;
@@ -57,7 +59,7 @@ public class CommandProcessor extends Query{
 		queryAndVerifySingle(sc.cmd);
 	}
 	
-	public synchronized void do_jobs_set(ArrayList<SumoCommand> scList) throws IOException{
+	public synchronized void do_jobs_set(List<SumoCommand> scList) throws IOException{
 		RequestMessage msg = new RequestMessage();
 		for(SumoCommand sc : scList) {
 			msg.append(sc.cmd);
@@ -65,18 +67,18 @@ public class CommandProcessor extends Query{
 		queryAndVerify(msg);
 	}
 	
-	public synchronized ArrayList<Object>  do_jobs_get(ArrayList<SumoCommand> scList) throws IOException{
+	public synchronized LinkedList<Object>  do_jobs_get(List<SumoCommand> cmdList) throws IOException{
 		Object output = null;
-		ArrayList<Object> outputList = new ArrayList<>();
+		LinkedList<Object> outputList = new LinkedList<Object>();
 		RequestMessage msg = new RequestMessage();
-		for(SumoCommand sc : scList) {
+		for(SumoCommand sc : cmdList) {
 			msg.append(sc.cmd);
 		}
 		ResponseMessage rm = queryAndVerify(msg);
 		
 		for(int i = 0 ; i < rm.responses().size(); i++) {
 			ResponseContainer rc = rm.responses().get(i);
-			SumoCommand sc = scList.get(i);
+			SumoCommand sc = cmdList.get(i);
 			Command resp = rc.getResponse();
 			//TODO: make this more general
 			// hack for allowing doing timesteps.
