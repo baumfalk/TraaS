@@ -1,4 +1,4 @@
-<project name="TrafficMAS" default="dist" basedir=".">
+<project name="TraaS" default="dist" basedir=".">
 	<description>
 		For making a TraaS-jar
 	</description>
