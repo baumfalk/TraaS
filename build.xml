@@ -1,18 +1,12 @@
 <project name="TrafficMAS" default="dist" basedir=".">
 	<description>
-For making a TraaS-jar
+		For making a TraaS-jar
 	</description>
 	
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
 	<property name="src" location="."/>
-	<property name="TrafficMAS" location="../TrafficMAS"/>
-	<property name="TrafficMASTests" location="../TrafficMASTests"/>
 
-
-	<tstamp>
-	    <format property="FULLDATE" pattern="yyyy-MM-dd" locale="en,GB"/>
-	 </tstamp>	
 	<target name="init">
 	    <!-- create timestamp-->
 	    <tstamp/>
@@ -39,16 +33,7 @@ For making a TraaS-jar
     	    <fileset dir="${dist}/doc/${DSTAMP}/${TSTAMP}" includes="**"/>  
 	 	</copy>
 		<copy file="${dist}/lib/${DSTAMP}/TraaS-${TSTAMP}.jar" tofile="${dist}/lib/latest/TraaS.jar"/>
-		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${TSTAMP}.jar" tofile="${dist}/lib/latest/TraaS_sources.jar"/>
-		
-		<!--- to trafficmas -->
-		<copy file="${dist}/lib/${DSTAMP}/TraaS-${TSTAMP}.jar" tofile="${TrafficMAS}/lib/TraaS.jar"/>
-		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${TSTAMP}.jar" tofile="${TrafficMAS}/lib/TraaS_sources.jar"/>
-
-		<!--- to trafficmastests -->
-		<copy file="${dist}/lib/${DSTAMP}/TraaS-${TSTAMP}.jar" tofile="${TrafficMASTests}/lib/TraaS.jar"/>
-		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${TSTAMP}.jar" tofile="${TrafficMASTests}/lib/TraaS_sources.jar"/>
-		
+		<copy file="${dist}/lib/${DSTAMP}/TraaS_sources-${TSTAMP}.jar" tofile="${dist}/lib/latest/TraaS_sources.jar"/>		
 	</target>
 	
 	<target name="javadoc" depends="init">
@@ -60,13 +45,6 @@ For making a TraaS-jar
 		
 		<!--- to latest -->
 		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${TSTAMP}.jar" tofile="${dist}/lib/latest/TraaS_javadoc.jar"/>
-
-		<!--- to trafficmas -->
-		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${TSTAMP}.jar" tofile="${TrafficMAS}/lib/TraaS_javadoc.jar"/>
-		
-		<!--- to trafficmastests -->
-		<copy file="${dist}/lib/${DSTAMP}/TraaS_javadoc-${TSTAMP}.jar" tofile="${TrafficMASTests}/lib/TraaS_javadoc.jar"/>
-
 	</target>
 	<target name="clean" description="clean up" >
 	    <!-- Delete the ${build} and ${dist} directory trees -->
